@@ -1,20 +1,10 @@
 const express = require("express");
 const app = express();
-const path = require("path");
-// setup static and middleware
-app.use(express.static('./public'))
-
-// app.get("/", (req, res) => {
-//   res.sendFile(path.resolve(__dirname, "./navbar-app/index.html"));
-// adding to static assets
-// SSR
-// });
-
-
-app.get("*", (req, res) => {
-  res.status(404).send("resource not found");
+const {products}= require('./data');
+app.set("json spaces", 2);
+app.get("/", (req, res) => {
+  res.json(products);
 });
-
 app.listen(5000, () => {
-  console.log("server started in 5000");
+  console.log("Server is listening to 5000...");
 });
