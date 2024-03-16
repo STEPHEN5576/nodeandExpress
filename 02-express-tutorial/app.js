@@ -19,6 +19,9 @@ app.get("/api/products/:productID", (req, res) => {
   const singleproduct = products.find(
     (product) => product.id === parsedProductID
   );
+  if(!singleproduct){
+    return res.status(404).send('Product Deos not Exist')
+  }
   res.json(singleproduct);
 });
 
