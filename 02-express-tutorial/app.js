@@ -5,17 +5,20 @@ const authorize = require("./authorize");
 //uses only after api query
 // app.use("/api", logger);
 const { products } = require("./data");
-app.use([logger, authorize]);
+// app.use([logger, authorize]);
+app.use(express.static("./public"))
 app.get("/", (req, res) => {
   res.send("Home");
 });
 app.get("/about", (req, res) => {
   res.send("About");
 });
+app.set("json spaces", 2);
+
 app.get("/api/products", (req, res) => {
   res.send(products);
 });
-app.get("/api/items", (req, res) => {
+app.get("/api/items", [logger, authorize], (req, res) => {
   console.log(req.user);
   res.send("items");
 });
