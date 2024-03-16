@@ -12,8 +12,13 @@ app.get("/api/products", (req, res) => {
   });
   res.json(newProducts);
 });
-app.get("/api/products/1", (req, res) => {
-  const singleproduct = products.find((product) => product.id === 1);
+app.get("/api/products/:productID", (req, res) => {
+  const { productID } = req.params;
+  console.log(req.params);
+  const parsedProductID = parseInt(productID);
+  const singleproduct = products.find(
+    (product) => product.id === parsedProductID
+  );
   res.json(singleproduct);
 });
 
