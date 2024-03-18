@@ -1,32 +1,67 @@
-const express = require("express");
-const app = express();
-let { people } = require("./data");
-app.set("json spaces", 2);
-// static assests
-app.use(express.static("./methods-public"));
+let { people } = require('./data')
 
-app.use(express.json);
-// parse form data
-app.use(express.urlencoded({ extended: false }));
-app.get("/api/people", (req, res) => {
-  res.status(200).send({
-    sucess: true,
-    data: people,
-  });
-});
+const getPeople = (req, res) => {
+  res.status(200).json({ success: true, data: people })
+}
 
-app.post('/api/people', (req, res) =>{
-  res.status(201).send('Sucess');
-})
-
-app.post("/login", (req, res) => {
-  const { name } = req.body;
-  if (name) {
-    return res.status(200).send(`Welcome ${name}`);
+const createPerson = (req, res) => {
+  const { name } = req.body
+  if (!name) {
+    return res
+      .status(400)
+      .json({ success: false, msg: 'please provide name value' })
   }
-  res.status(401).send("Please provide the name");
-});
+  res.status(201).send({ success: true, person: name })
+}
 
-app.listen(5000, () => {
-  console.log("Server is listening to 5000...");
-});
+const createPersonPostman = (req, res) => {
+  const { name } = req.body
+  if (!name) {
+    return res
+      .status(400)
+      .json({ success: false, msg: 'please provide name value' })
+  }
+  res.status(201).send({ success: true, data: [...people, name] })
+}
+
+const updatePerson = (req, res) => {
+  const { id } = req.params
+  const { name } = req.body
+
+  const person = people.find((person) => person.id === Number(id))
+
+  if (!person) {
+    return res
+      .status(404)
+      .json({ success: false, msg: `no person with id ${id}` })
+  }
+  const newPeople = people.map((person) => {
+    if (person.id === Number(id)) {
+      person.name = name
+    }
+    return person
+  })
+  res.status(200).json({ success: true, data: newPeople })
+}
+
+const deletePerson = (req, res) => {
+  const person = people.find((person) => person.id === Number(req.params.id))
+  if (!person) {
+    return res
+      .status(404)
+      .json({ success: false, msg: `no person with id ${req.params.id}` })
+  }
+  const newPeople = people.filter(
+    (person) => person.id !== Number(req.params.id)
+  )
+  return res.status(200).json({ success: true, data: newPeople })
+}
+
+
+module.exports = {
+  getPeople,
+  createPerson,
+  createPersonPostman,
+  updatePerson,
+  deletePerson,
+}
