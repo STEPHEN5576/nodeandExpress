@@ -12,43 +12,36 @@ const getAllTasks =asyncWrapper( async (req, res) => {
       .json({ status: 'success', data: { tasks, nbHits: tasks.length } });
 });
 
-const createTask = async (req, res) => {
-  try {
+const createTask =asyncWrapper( async (req, res) => {
     const task = await Task.create(req.body);
     res.status(201).json({ task });
-  } catch (error) {
-    res.status(500).json({ msg: error });
-  }
-};
+  
+});
 
-const getTask = async (req, res) => {
-  try {
+const getTask = asyncWrapper( async (req, res) => {
+  
     const { id: taskID } = req.params;
     const task = await Task.findOne({ _id: taskID });
     if (!task) {
       return res.status(404).json({ msg: `No task with id : ${taskID}` });
     }
     res.status(200).json({ task });
-  } catch (error) {
-    res.status(404).json({ msg: error });
-  }
-};
+  
+});
 
-const deleteTask = async (req, res) => {
-  try {
+const deleteTask =asyncWrapper( async (req, res) => {
+  
     const { id: taskID } = req.params;
     const task = await Task.findOneAndDelete({ _id: taskID });
     if (!task) {
       return res.status(404).send({ msg: `Not found id: ${taskID}` });
     }
     res.status(200).json({ task: null, status: "success" });
-  } catch (error) {
-    res.status(404).json({ msg: error });
-  }
-};
+  
+});
 
-const UpdateTask = async (req, res) => {
-  try {
+const UpdateTask =asyncWrapper( async (req, res) => {
+
     const { id: taskID } = req.params;
     const task = await Task.findOneAndUpdate({ _id: taskID }, req.body, {
       new: true,
@@ -59,13 +52,10 @@ const UpdateTask = async (req, res) => {
       return res.status(404).json({ msg: `Not found id: ${taskID}` });
     }
     res.status(200).json({ task });
-  } catch (error) {
-    res.status(500).json({ msg: error });
-  }
-};
 
-const editTask = async () => {
-  try {
+});
+
+const editTask =asyncWrapper( async () => {
     const { id: taskID } = req.params;
     const task = await Task.findOneAndUpdate({ _id: taskID }, req.body, {
       new: true,
@@ -76,10 +66,8 @@ const editTask = async () => {
       return res.status(404).json({ msg: `No task with the id: ${taskID}` });
     }
     return res.status(200).json({ task });
-  } catch (error) {
-    console.log(error);
-  }
-};
+  
+});
 
 module.exports = {
   getAllTasks,
