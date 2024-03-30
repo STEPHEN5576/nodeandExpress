@@ -4,14 +4,11 @@ const tasks = require("./routes/tasks");
 require('dotenv').config();
 const connectDB = require("./db/connect");
 
-
-app.get("/hello", (req, res) => {
-  res.send("Task Manager app");
-});
-
-
+// middleware
+app.use(express.static('./public'))
 app.use(express.json());
 
+// routes
 app.use("/api/v1/tasks", tasks);
 
 const port = 3000;
